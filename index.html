@@ -287,6 +287,9 @@
                 <button class="phrase-btn" data-id="skin-back">
                     <span>🔄</span> 轉身檢查背後的皮膚
                 </button>
+                <button class="phrase-btn" data-id="exam-done">
+                    <span>✅</span> 檢查完了
+                </button>
             </div>
 
             <div class="result-card" id="resultCard">
@@ -317,25 +320,28 @@
 
         const translations = {
             'vi': {
-                'wristband': 'Kiểm tra vòng đeo tay',
-                'skin-front': 'Kéo áo mặt trước lên để kiểm tra da',
-                'skin-back': 'Quay người lại để kiểm tra da ở lưng',
-                'symptoms-questionnaire': 'Bạn có triệu chứng nào trên bảng câu hỏi không?',
-                'symptoms-which': 'Bạn có triệu chứng nào?'
+                'wristband': 'Cho tôi xem vòng đeo tay để kiểm tra thông tin',
+                'skin-front': 'Kéo áo lên một chút để kiểm tra da',
+                'skin-back': 'Quay lưng lại một chút để kiểm tra da',
+                'symptoms-questionnaire': 'Bạn có triệu chứng như trong bảng câu hỏi không?',
+                'symptoms-which': 'Bạn có triệu chứng nào?',
+                'exam-done': 'Đã kiểm tra xong rồi'
             },
             'id': {
-                'wristband': 'Periksa gelang nama',
-                'skin-front': 'Angkat baju untuk memeriksa kulit',
-                'skin-back': 'Berbalik untuk memeriksa kulit di punggung',
-                'symptoms-questionnaire': 'Apakah Anda memiliki gejala yang ada di kuesioner?',
-                'symptoms-which': 'Gejala apa yang Anda alami?'
+                'wristband': 'Tolong tunjukkan gelang nama Anda',
+                'skin-front': 'Tolong angkat baju sedikit untuk periksa kulit',
+                'skin-back': 'Tolong berbalik sedikit untuk periksa kulit punggung',
+                'symptoms-questionnaire': 'Ada gejala seperti di kuesioner?',
+                'symptoms-which': 'Gejala apa yang Anda alami?',
+                'exam-done': 'Pemeriksaan sudah selesai'
             },
             'th': {
-                'wristband': 'ตรวจสอบสายรัดข้อมือ',
-                'skin-front': 'เลิกเสื้อขึ้นเพื่อตรวจดูผิวหนัง',
-                'skin-back': 'หันหลังเพื่อตรวจดูผิวหนังบริเวณหลัง',
-                'symptoms-questionnaire': 'คุณมีอาการตามแบบสอบถามหรือไม่?',
-                'symptoms-which': 'คุณมีอาการแบบไหน?'
+                'wristband': 'ขอดูสายรัดข้อมือหน่อยครับ',
+                'skin-front': 'ช่วยเลิกเสื้อขึ้นหน่อยครับ',
+                'skin-back': 'ช่วยหันหลังให้ตรวจผิวหนังหน่อยครับ',
+                'symptoms-questionnaire': 'มีอาการตามที่เขียนไว้ไหมครับ',
+                'symptoms-which': 'มีอาการอะไรบ้างครับ',
+                'exam-done': 'ตรวจเสร็จแล้วครับ'
             }
         };
 
@@ -344,7 +350,8 @@
             'skin-front': '拉起上衣檢查皮膚',
             'skin-back': '轉身檢查背後的皮膚',
             'symptoms-questionnaire': '你有問卷上的症狀嗎?',
-            'symptoms-which': '你有哪一個症狀?'
+            'symptoms-which': '你有哪一個症狀?',
+            'exam-done': '檢查完了'
         };
 
         let currentLang = 'vi';
