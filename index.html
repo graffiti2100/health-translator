@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外籍健檢多語翻譯</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #10B981;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #818CF8);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            background: #F1F5F9;
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .lang-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+        }
+
+        .phrases-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .phrase-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .phrase-btn:hover {
+            border-color: #A5B4FC;
+            background-color: #EEF2FF;
+            transform: translateY(-2px);
+        }
+
+        .phrase-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .phrase-btn span {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+            border: 1px solid #BBF7D0;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: flex;
+        }
+
+        .result-original {
+            font-size: 1rem;
+            color: #166534;
+            margin-bottom: 8px;
+            font-weight: 500;
+            background: #BBF7D0;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .result-translated {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #15803D;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: white;
+            border: 2px solid #22C55E;
+            color: #16A34A;
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: #22C55E;
+            color: white;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.96);
+        }
+
+        button {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .speaker-btn {
+            border-color: #3B82F6;
+            color: #2563EB;
+        }
+        
+        .speaker-btn:hover {
+            background: #3B82F6;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🌐 外籍健檢多語翻譯</h1>
+            <p>點擊病患母語並選擇片語，即可顯示對應翻譯</p>
+        </div>
+
+        <div class="content">
+            <div class="section-title">步驟 1: 選擇對象語言</div>
+            <div class="lang-selector">
+                <button class="lang-btn active" data-lang="vi" data-voice="vi-VN">🇻🇳 越南文</button>
+                <button class="lang-btn" data-lang="id" data-voice="id-ID">🇮🇩 印尼文</button>
+                <button class="lang-btn" data-lang="th" data-voice="th-TH">🇹🇭 泰文</button>
+            </div>
+
+            <div class="section-title">步驟 2: 點擊所需片語</div>
+            <div class="phrases-grid">
+                <!-- Row 1 -->
+                <button class="phrase-btn" data-id="wristband">
+                    <span>🆔</span> 核對手圈
+                </button>
+                <button class="phrase-btn" data-id="symptoms-questionnaire">
+                    <span>📋</span> 你有問卷上的症狀嗎?
+                </button>
+                
+                <!-- Row 2 -->
+                <button class="phrase-btn" data-id="skin-front">
+                    <span>👕</span> 拉起上衣檢查皮膚
+                </button>
+                <button class="phrase-btn" data-id="symptoms-which">
+                    <span>😷</span> 你有哪一個症狀?
+                </button>
+                
+                <!-- Row 3 -->
+                <button class="phrase-btn" data-id="skin-back">
+                    <span>🔄</span> 轉身檢查背後的皮膚
+                </button>
+            </div>
+
+            <div class="result-card" id="resultCard">
+                <div class="result-original" id="originalText">核對手圈</div>
+                <div class="result-translated" id="translatedText">Kiểm tra vòng đeo tay</div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn speaker-btn" id="speakBtn" onclick="speakText()">
+                        <span>🔊</span> 語音朗讀
+                    </button>
+                    <button class="action-btn" id="copyBtn" onclick="copyText()">
+                        <span>📋</span> 複製文字
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker 註冊成功:', reg.scope))
+                    .catch(err => console.log('Service Worker 註冊失敗: ', err));
+            });
+        }
+
+        const translations = {
+            'vi': {
+                'wristband': 'Kiểm tra vòng đeo tay',
+                'skin-front': 'Kéo áo mặt trước lên để kiểm tra da',
+                'skin-back': 'Quay người lại để kiểm tra da ở lưng',
+                'symptoms-questionnaire': 'Bạn có triệu chứng nào trên bảng câu hỏi không?',
+                'symptoms-which': 'Bạn có triệu chứng nào?'
+            },
+            'id': {
+                'wristband': 'Periksa gelang nama',
+                'skin-front': 'Angkat baju untuk memeriksa kulit',
+                'skin-back': 'Berbalik untuk memeriksa kulit di punggung',
+                'symptoms-questionnaire': 'Apakah Anda memiliki gejala yang ada di kuesioner?',
+                'symptoms-which': 'Gejala apa yang Anda alami?'
+            },
+            'th': {
+                'wristband': 'ตรวจสอบสายรัดข้อมือ',
+                'skin-front': 'เลิกเสื้อขึ้นเพื่อตรวจดูผิวหนัง',
+                'skin-back': 'หันหลังเพื่อตรวจดูผิวหนังบริเวณหลัง',
+                'symptoms-questionnaire': 'คุณมีอาการตามแบบสอบถามหรือไม่?',
+                'symptoms-which': 'คุณมีอาการแบบไหน?'
+            }
+        };
+
+        const originalPhrases = {
+            'wristband': '核對手圈',
+            'skin-front': '拉起上衣檢查皮膚',
+            'skin-back': '轉身檢查背後的皮膚',
+            'symptoms-questionnaire': '你有問卷上的症狀嗎?',
+            'symptoms-which': '你有哪一個症狀?'
+        };
+
+        let currentLang = 'vi';
+        let currentVoiceLang = 'vi-VN';
+        let currentPhraseId = null;
+
+        const langBtns = document.querySelectorAll('.lang-btn');
+        const phraseBtns = document.querySelectorAll('.phrase-btn');
+        const resultCard = document.getElementById('resultCard');
+
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                langBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+                currentVoiceLang = btn.dataset.voice;
+                
+                if (currentPhraseId) {
+                    updateResult();
+                }
+            });
+        });
+
+        phraseBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                phraseBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPhraseId = btn.dataset.id;
+                updateResult();
+            });
+        });
+
+        function updateResult() {
+            if (!currentPhraseId) return;
+
+            const originalTextEl = document.getElementById('originalText');
+            const translatedTextEl = document.getElementById('translatedText');
+            const copyBtn = document.getElementById('copyBtn');
+
+            originalTextEl.textContent = originalPhrases[currentPhraseId];
+            translatedTextEl.textContent = translations[currentLang][currentPhraseId];
+            copyBtn.innerHTML = '<span>📋</span> 複製文字';
+
+            // Show card smoothly
+            resultCard.style.display = 'flex';
+            setTimeout(() => {
+                resultCard.classList.add('show');
+            }, 10);
+        }
+
+        function copyText() {
+            const textToCopy = document.getElementById('translatedText').textContent;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerHTML = '<span>✅</span> 已複製！';
+                copyBtn.style.animation = 'pulse 0.3s ease';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<span>📋</span> 複製文字';
+                    copyBtn.style.animation = '';
+                }, 2000);
+            });
+        }
+        
+        // 預防性載入語音，確保查詢準確
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+        
+        function speakText() {
+            const text = document.getElementById('translatedText').textContent;
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = currentVoiceLang;
+                utterance.rate = 0.9; // Slightly slower for clarity
+                
+                // 檢查電腦是否真的有該語言的語音包
+                const voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    const targetLang = currentVoiceLang.split('-')[0]; // 例如擷取 'th'
+                    const matchedVoice = voices.find(v => v.lang.toLowerCase().includes(targetLang) || v.lang.toLowerCase().includes(currentVoiceLang.toLowerCase()));
+                    
+                    if (matchedVoice) {
+                        utterance.voice = matchedVoice; // 明確指定口音
+                    } else {
+                        const langName = document.querySelector('.lang-btn.active').textContent.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '').trim();
+                        alert(`系統提示：您的電腦尚未安裝「${langName}」的語音包，因此無法正確發音。\n\n💡 解決方法 (以 Windows 為例)：\n1. 開啟電腦的「設定」\n2. 點擊「時間與語言」>「語音」\n3. 找到底下「新增語音」，搜尋並安裝泰文等語言，新增後重開瀏覽器即可。`);
+                        return; // 找不到語音則中止，避免用英文腔調硬念
+                    }
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('您的瀏覽器不支援語音功能。');
+            }
+        }
+    </script>
+</body>
+</html>
